@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Вход";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <h1>Вход</h1>
+
+    @{
+        if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert" role="alert">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+    }
+
+    <form style="background-color:#fff;" action="Login" method="post">
+        <div>
+            <label for="login">Логин:</label>
+            <input type="text" id="login" name="login" required />
+        </div>
+        <div>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required />
+        </div>
+        <button style="background-color:#89004E; border-radius:25px; margin-top:30px; width:fit-content; padding: 10px 15px;" type="submit">Войти</button>
+    </form>
+
+</body>
+</html>
+
+<style>
+    .alert {
+        text-align: center;
+        color: red;
+    }
+    .button {
+
+    }
+    .button:hover {
+        background-color: #66003A;
+    }
+</style>

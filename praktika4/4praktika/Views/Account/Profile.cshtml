@@ -1,0 +1,263 @@
+﻿@{
+	ViewData["Title"] = "Профиль";
+}
+@using Microsoft.EntityFrameworkCore;
+@using _4praktika.Models
+
+@functions {
+	public string GetLoginById(int userId)
+	{
+		var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+		optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=chat;Username=postgres;Password=mirandolina");
+		using (var context = new MyDbContext(optionsBuilder.Options))
+		{
+			var user = context.Users.FirstOrDefault(u => u.Id == userId);
+			return user != null ? user.Login : null;
+		}
+	}
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"]</title>
+	<link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body style="text-align: center; margin:auto">
+	<h1>Аккаунт @Model.FullName</h1>
+	<h3>Логин: @Model.Login</h3>
+
+	<div>
+		<h2 style="margin-top:40px;">Фильтр сообщений</h2>
+		<form action="Profile" method="get">
+			<input type="hidden" name="login" value="@Model.Login" />
+
+			<div>
+				<label for="senderLogin">От кого (логин):</label>
+				<input type="text" id="senderLogin" name="senderLogin" />
+			</div>
+
+			<div>
+				<label for="status">Статус</label>
+				<select id="status" name="status">
+					<option value="">Все</option>
+					<option value="unread">Непрочитанные</option>
+				</select>
+			</div>
+			<div style="display:flex; flex-direction:row; column-gap:60px; margin-top:30px">
+				<div>
+					<label for="startDate">С даты:</label>
+					<input type="date" id="startDate" name="startDate" />
+				</div>
+
+				<div>
+					<label for="endDate">По дату:</label>
+					<input type="date" id="endDate" name="endDate" />
+				</div>
+			</div>
+
+
+			<button style="width:90px" type="submit">Найти</button>
+		</form>
+	</div>
+
+	<h2>Сообщения</h2>
+	<div style="width:auto; text-align:center; margin:auto">
+		<table style="background-color:#fff; border-radius: 10px;">
+			<tr>
+				<th>От кого</th>
+				<th>Тема</th>
+				<th>Дата</th>
+
+			</tr>
+			@foreach (var message in ViewBag.Messages)
+			{
+				<tr data-message-id="@message.Id" @if (message.Status == "new")
+				{
+					<text>style="background-color: gray;"</text>
+				}>
+						<td>@GetLoginById(message.FromUserId)</td>
+											<td><a href="#" onclick="openModal('@message.MessageText', @message.Id, '@Model.Login')">@(message.MessageSubject)</a></td>
+								<td>@message.SendDate</td>
+
+							</tr>
+
+			}
+		</table>
+	</div>
+
+
+
+	<!-- форма для отправки сообщений -->
+	<h2>Отправить сообщение</h2>
+	<form action="SendMessage" method="post">
+		<input type="text" id="currentId" name="currentId" value="@(ViewBag.User.Id)" hidden="true" />
+		<div>
+			<label for="recipientLogin">Кому (логин):</label>
+			<input type="text" id="recipientLogin" name="recipientLogin" required />
+		</div>
+		<div>
+			<label for="messageSubject">Тема сообщения:</label>
+			<input type="text" id="messageSubject" name="messageSubject" required />
+		</div>
+		<div>
+			<label for="messageText">Сообщение:</label>
+			<textarea id="messageText" name="messageText" required></textarea>
+		</div>
+		<div style="width:110px; text-align:center; margin:auto">
+			<button type="submit">Отправить</button>
+		</div>
+	</form>
+
+	@if (ViewBag.ErrorMessage != null)
+	{
+		<div class="alert">
+			@ViewBag.ErrorMessage
+		</div>
+	}
+
+
+	<!-- Модальное окно -->
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<p id="modalText"></p>
+		</div>
+	</div>
+
+	<script>
+		async function updateMessageStatus(messageId, login) {
+			try {
+				const response = await fetch(`/Account/UpdateMessageStatus/${login}/${messageId}`, {
+					method: 'POST',
+				});
+				const data = await response.json();
+				return data;
+			} catch (error) {
+				console.error('Ошибка при обновлении статуса сообщения:', error);
+				throw error;
+			}
+		}
+
+		async function updateMessageAndCloseModal(messageId, login) {
+			try {
+				await updateMessageStatus(messageId, login);
+				closeModal();
+			} catch (error) {
+				console.error("Ошибка при обновлении статуса сообщения:", error);
+			}
+		}
+
+		function openModal(text, messageId, login) {
+			document.getElementById("modalText").innerText = text;
+			var modal = document.getElementById("myModal");
+			modal.style.display = "block";
+			var span = document.getElementsByClassName("close")[0];
+			span.onclick = function () {
+				closeModal();
+			}
+			window.onclick = function (event) {
+				if (event.target == modal) {
+					closeModal();
+				}
+			}
+
+			async function closeModal() {
+				modal.style.display = "none";
+				await updateMessageAndCloseModal(messageId, login);
+			}
+		}
+
+	</script>
+
+</body>
+</html>
+
+<style>
+	.alert {
+		text-align: center;
+		color: red;
+	}
+
+	button {
+		background-color: #89004E;
+		border-radius: 25px;
+		margin-top: 30px;
+	}
+
+		button:hover {
+			background-color: #66003A;
+		}
+
+	table {
+		padding: 20px;
+		width: 500px;
+		border-collapse: collapse;
+		margin: 0 auto 80px;
+		background-color: #fff;
+	}
+
+	th, td {
+		border: none;
+		border-radius: 20px;
+		padding: 20px;
+		text-align: left;
+		background-color: #fff;
+	}
+
+	select {
+		border: solid 1px #89004E;
+		border-radius: 10px;
+		padding: 7px 10px;
+	}
+
+	input {
+		border: solid 1px #89004E;
+		border-radius: 10px;
+		padding: 7px 10px;
+	}
+
+	th {
+		background-color: #fff;
+		font-weight: bold;
+		border-bottom: solid 1px #89004E;
+	}
+
+	
+
+	.modal {
+		display: none;
+		position: fixed;
+		border-radius: 20px;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		background-color: rgba(0,0,0,0.4);
+	}
+
+	.modal-content {
+		background-color: #fff;
+		margin: 15% auto;
+		padding: 20px;
+		width: 60%;
+		border-radius: 20px;
+	}
+
+	.close {
+		color: #89004E;
+		float: right;
+		font-size: 28px;
+		font-weight: bold;
+	}
+
+		.close:hover,
+		.close:focus {
+			text-decoration: none;
+			cursor: pointer;
+		}
+</style>
