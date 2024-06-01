@@ -8,7 +8,7 @@
 	public string GetLoginById(int userId)
 	{
 		var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
-		optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=chat;Username=postgres;Password=mirandolina");
+		optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=chat;Username=postgres;Password=");
 		using (var context = new MyDbContext(optionsBuilder.Options))
 		{
 			var user = context.Users.FirstOrDefault(u => u.Id == userId);
