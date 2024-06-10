@@ -16,7 +16,7 @@ namespace _4praktika.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=chat;Username=postgres;Password=mirandolina");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=chat;Username=postgres;Password=");
             optionsBuilder.UseSnakeCaseNamingConvention();
         }
     }
