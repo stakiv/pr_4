@@ -28,12 +28,25 @@ label {
 }
 
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="date"]{
     width: 100%;
-    padding: 20px;
     margin-bottom: 15px;
     border: 1px solid #89004E;
     border-radius: 10px;
     box-sizing: border-box;
+    padding: 7px 10px;
 }
+button {
+    background-color: #FF0A95;
+    border-radius: 25px;
+    margin-top: 30px;
+    padding: 10px 25px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #CC0074;
+}
+
 

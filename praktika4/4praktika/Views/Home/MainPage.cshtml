@@ -13,13 +13,26 @@
     <h1>Войдите или зарегистрируйтесь</h1>
 
     <form method="post" action="Account/LoginPage">
-        <button style="background-color: #89004E; border-radius: 25px;" type="submit" name="buttonType" value="Login">Вход</button>
+        <button type="submit" name="buttonType" value="Login">Вход</button>
     </form>
     <form method="post" action="Account/RegistrationPage">
-        <button style="background-color: #89004E; border-radius: 25px;" type="submit" name="buttonType" value="Register">Регистрация</button>
+        <button type="submit" name="buttonType" value="Register">Регистрация</button>
     </form>
 
     
 
 </body>
 </html>
+<style>
+    button {
+        background-color: #FF0A95;
+        border-radius: 25px;
+        margin-top: 30px;
+        padding: 10px 25px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #CC0074;
+        }
+</style>

@@ -49,12 +49,12 @@
 			<div style="display:flex; flex-direction:row; column-gap:60px; margin-top:30px">
 				<div>
 					<label for="startDate">С даты:</label>
-					<input type="date" id="startDate" name="startDate" />
+					<input style="width: 100%;margin-bottom: 15px;border: 1px solid #89004E;border-radius: 10px;box-sizing: border-box;padding: 7px 10px;" type="date" id="startDate" name="startDate" />
 				</div>
 
 				<div>
 					<label for="endDate">По дату:</label>
-					<input type="date" id="endDate" name="endDate" />
+					<input style="width: 100%;margin-bottom: 15px;border: 1px solid #89004E;border-radius: 10px;box-sizing: border-box;padding: 7px 10px;" type="date" id="endDate" name="endDate" />
 				</div>
 			</div>
 
@@ -76,13 +76,13 @@
 			{
 				<tr data-message-id="@message.Id" @if (message.Status == "new")
 				{
-					<text>style="background-color: gray;"</text>
+					<text>style="border: 2px #FF0A95 solid; border-radius: 25px;"</text>
 				}>
-						<td>@GetLoginById(message.FromUserId)</td>
-											<td><a href="#" onclick="openModal('@message.MessageText', @message.Id, '@Model.Login')">@(message.MessageSubject)</a></td>
-								<td>@message.SendDate</td>
+							<td>@GetLoginById(message.FromUserId)</td>
+												<td><a href="#" onclick="openModal('@message.MessageText', @message.Id, '@Model.Login')">@(message.MessageSubject)</a></td>
+									<td>@message.SendDate</td>
 
-							</tr>
+								</tr>
 
 			}
 		</table>
@@ -182,13 +182,15 @@
 	}
 
 	button {
-		background-color: #89004E;
+		background-color: #FF0A95;
 		border-radius: 25px;
 		margin-top: 30px;
+		padding: 10px 25px;
+		cursor: pointer;
 	}
 
 		button:hover {
-			background-color: #66003A;
+			background-color: #CC0074;
 		}
 
 	table {
@@ -213,11 +215,7 @@
 		padding: 7px 10px;
 	}
 
-	input {
-		border: solid 1px #89004E;
-		border-radius: 10px;
-		padding: 7px 10px;
-	}
+
 
 	th {
 		background-color: #fff;
@@ -225,7 +223,7 @@
 		border-bottom: solid 1px #89004E;
 	}
 
-	
+
 
 	.modal {
 		display: none;
